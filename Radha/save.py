@@ -72,7 +72,7 @@ async def send_start(client: Client, message: Message):
             'registered_at': time.time()
         })
 	
-	    buttons = [[
+    buttons = [[
         InlineKeyboardButton("❣️ Developer", url = "https://t.me/i_am_radha")
     ],[
         InlineKeyboardButton('🔍 sᴜᴘᴘᴏʀᴛ ɢʀᴏᴜᴘ', url='https://t.me/radhasuppportchat'),
