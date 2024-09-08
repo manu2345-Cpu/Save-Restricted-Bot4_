@@ -65,12 +65,12 @@ def progress(current, total, message, type):
 @Client.on_message(filters.command(["start"]))
 async def send_start(client: Client, message: Message):
 	
-	user_data = database.users.find_one({"chat_id": message.chat.id})
+	user_data = database.users.find_one({"user_id": message.chat.id})
 	
 	if not user_data:
         # If user not found, add them to the users collection
-        new_user = {
-            "chat_id": message.chat.id,
+		new_user = {
+            "user_id": message.chat.id,
             "first_name": message.from_user.first_name,
             "registered_at": time.time()
         }
