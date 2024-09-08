@@ -12,7 +12,7 @@ import threading
 import json
 from config import API_ID, API_HASH
 from database.db import database 
-from TechVJ.strings import strings, HELP_TXT
+from Radha.strings import strings, HELP_TXT
 
 def get(obj, key, default=None):
     try:
