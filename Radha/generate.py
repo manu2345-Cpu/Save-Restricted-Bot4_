@@ -28,7 +28,7 @@ def get(obj, key, default=None):
 
 @Client.on_message(filters.private & ~filters.forwarded & filters.command(["logout"]))
 async def logout(_, msg):
-    user_data = database.find_one({"chat_id": msg.chat.id})
+    user_data = database.sessions.find_one({"user_id": msg.chat.id})
     if user_data is None or not user_data.get('session'):
         return 
     data = {
@@ -40,8 +40,8 @@ async def logout(_, msg):
 
 @Client.on_message(filters.private & ~filters.forwarded & filters.command(["login"]))
 async def main(bot: Client, message: Message):
-    database.insert_one({"chat_id": message.from_user.id})
-    user_data = database.find_one({"chat_id": message.from_user.id})
+    database.sessions.insert_one({"user_id": message.from_user.id})
+    user_data = database.session.find_one({"user_id": message.from_user.id})
     if get(user_data, 'logged_in', False):
         await message.reply(strings['already_logged_in'])
         return 
@@ -85,7 +85,7 @@ async def main(bot: Client, message: Message):
     if len(string_session) < SESSION_STRING_SIZE:
         return await message.reply('<b>invalid session sring</b>')
     try:
-        user_data = database.find_one({"chat_id": message.from_user.id})
+        user_data = database.sessions.find_one({"user_id": message.from_user.id})
         if user_data is not None:
             data = {
                 'session': string_session,
