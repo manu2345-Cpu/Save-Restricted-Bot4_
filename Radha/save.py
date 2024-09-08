@@ -67,8 +67,8 @@ async def send_start(client: Client, message: Message):
 	
     if not database.users.find_one({'user_id': user.id}):
         database.users.insert_one({
-            'user_id': user.id,
-            'first_name': user.first_name,
+            'user_id': message.from_user.id,
+            'first_name': message.from_user.first_name,
             'registered_at': time.time()
         })
 	
