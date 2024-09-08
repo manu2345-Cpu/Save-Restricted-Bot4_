@@ -65,18 +65,14 @@ def progress(current, total, message, type):
 @Client.on_message(filters.command(["start"]))
 async def send_start(client: Client, message: Message):
 	
-	user_data = database.users.find_one({"user_id": message.chat.id})
+    if not database.users.find_one({'user_id': user.id}):
+        database.users.insert_one({
+            'user_id': user.id,
+            'first_name': user.first_name,
+            'registered_at': time.time()
+        })
 	
-	if not user_data:
-        # If user not found, add them to the users collection
-		new_user = {
-            "user_id": message.chat.id,
-            "first_name": message.from_user.first_name,
-            "registered_at": time.time()
-        }
-        database.users.insert_one(new_user)
-
-	buttons = [[
+	    buttons = [[
         InlineKeyboardButton("❣️ Developer", url = "https://t.me/i_am_radha")
     ],[
         InlineKeyboardButton('🔍 sᴜᴘᴘᴏʀᴛ ɢʀᴏᴜᴘ', url='https://t.me/radhasuppportchat'),
