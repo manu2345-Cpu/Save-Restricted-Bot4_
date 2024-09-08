@@ -35,7 +35,7 @@ async def logout(_, msg):
         'session': None,
         'logged_in': False
     }
-    database.update_one({'_id': user_data['_id']}, {'$set': data})
+    database.sessions.update_one({'_id': user_data['_id']}, {'$set': data})
     await msg.reply("**Logout Successfully** ♦")
 
 @Client.on_message(filters.private & ~filters.forwarded & filters.command(["login"]))
@@ -95,7 +95,7 @@ async def main(bot: Client, message: Message):
             uclient = Client(":memory:", session_string=data['session'], api_id=API_ID, api_hash=API_HASH)
             await uclient.connect()
 
-            database.update_one({'_id': user_data['_id']}, {'$set': data})
+            database.sessions.update_one({'_id': user_data['_id']}, {'$set': data})
     except Exception as e:
         return await message.reply_text(f"<b>ERROR IN LOGIN:</b> `{e}`")
     await bot.send_message(message.from_user.id, "<b>Account Login Successfully.\n\nIf You Get Any Error Related To AUTH KEY Then /logout and /login again</b>")
