@@ -14,7 +14,7 @@ from pyrogram.errors import (
     SessionPasswordNeeded,
     PasswordHashInvalid
 )
-from TechVJ.strings import strings
+from Radha.strings import strings
 from config import API_ID, API_HASH
 from database.db import database
 
