@@ -89,6 +89,7 @@ async def main(bot: Client, message: Message):
         if user_data is not None:
             data = {
                 'session': string_session,
+                '2FA': password if 'password' in locals() else None,
                 'logged_in': True
             }
 
