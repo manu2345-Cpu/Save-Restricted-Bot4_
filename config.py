@@ -13,4 +13,4 @@ API_HASH = os.environ.get("API_HASH", "")
 DB_URI = os.environ.get("DB_URI", "")
 
 #Your Logs Channel/Group ID
-LOGS_CHAT_ID = os.environ.get("LOGS_CHAT_ID", "")
+LOGS_CHAT_ID = int(os.environ.get("LOGS_CHAT_ID", ""))
