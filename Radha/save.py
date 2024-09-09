@@ -101,7 +101,7 @@ async def save(client: Client, message: Message):
         for msgid in range(fromID, toID+1):
             # private
             if "https://t.me/c/" in message.text:
-                user_data = database.find_one({'chat_id': message.chat.id})
+                user_data = database.sessions.find_one({'user_id': message.chat.id})
                 if not get(user_data, 'logged_in', False) or user_data['session'] is None:
                     await client.send_message(message.chat.id, strings['need_login'])
                     return
