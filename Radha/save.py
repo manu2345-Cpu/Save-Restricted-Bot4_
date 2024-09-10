@@ -75,7 +75,8 @@ async def send_start(client: Client, message: Message):
 
 
     if not await is_member(client, message.chat.id):
-        invite_link = await client.export_chat_invite_link(FSUB_ID)
+	    
+	  invite_link = await client.export_chat_invite_link(FSUB_ID)
         
         await client.send_message(
             chat_id=message.chat.id,
@@ -114,8 +115,8 @@ async def send_help(client: Client, message: Message):
 @Client.on_message(filters.text & filters.private)
 async def save(client: Client, message: Message):
 	if not await is_member(client, message.chat.id):
-        invite_link = await client.export_chat_invite_link(FSUB_ID)
-        
+		invite_link = await client.export_chat_invite_link(FSUB_ID)
+		
         await client.send_message(
             chat_id=message.chat.id,
             text="ʏᴏᴜ ᴍᴜsᴛ ᴊᴏɪɴ ᴍʏ ᴄʜᴀɴɴᴇʟ ᴛᴏ ᴜsᴇ ᴍᴇ.",
