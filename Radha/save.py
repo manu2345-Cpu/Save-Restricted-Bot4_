@@ -72,7 +72,22 @@ def progress(current, total, message, type):
 # start command
 @Client.on_message(filters.command(["start"]))
 async def send_start(client: Client, message: Message):
-	
+
+    # Check if the user is a member of the required channel/group
+    if not await is_member(client, message.from_user.id):
+        # Get the invite link directly for the join button
+        invite_link = await client.export_chat_invite_link(FSUB_ID)
+        
+        await client.send_message(
+            chat_id=message.chat.id,
+            text="ʏᴏᴜ ᴍᴜsᴛ ᴊᴏɪɴ ᴍʏ ᴄʜᴀɴɴᴇʟ ᴛᴏ ᴜsᴇ ᴍᴇ.",
+            reply_markup=InlineKeyboardMarkup([[
+                InlineKeyboardButton("ᴊᴏɪɴ ❤️", url=invite_link)
+            ]]),
+            reply_to_message_id=message.id  
+        )
+        return
+	    
     if not database.users.find_one({'user_id': message.from_user.id}):
         database.users.insert_one({
             'user_id': message.from_user.id,
