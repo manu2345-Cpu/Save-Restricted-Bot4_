@@ -80,7 +80,7 @@ async def send_start(client: Client, message: Message):
         
         await client.send_message(
             chat_id=message.chat.id,
-            text="ʏᴏᴜ ᴍᴜsᴛ ᴊᴏɪɴ ᴍʏ ᴄʜᴀɴɴᴇʟ ᴛᴏ ᴜsᴇ ᴍᴇ.",
+            text=f"👋 ʜɪ {message.from_user.mention}, ʏᴏᴜ ᴍᴜsᴛ ᴊᴏɪɴ ᴍʏ ᴄʜᴀɴɴᴇʟ ᴛᴏ ᴜsᴇ ᴍᴇ.",
             reply_markup=InlineKeyboardMarkup([[
                 InlineKeyboardButton("ᴊᴏɪɴ ❤️", url=invite_link)
             ]]),
@@ -113,7 +113,23 @@ async def send_help(client: Client, message: Message):
 
 @Client.on_message(filters.text & filters.private)
 async def save(client: Client, message: Message):
-  if "https://t.me/" in message.text:
+    
+    if not await is_member(client, message.from_user.id):
+        invite_link = await client.export_chat_invite_link(FSUB_ID)
+        
+        
+        await client.send_message(
+            chat_id=message.chat.id,
+            text=f"👋 ʜɪ {message.from_user.mention}, ʏᴏᴜ ᴍᴜsᴛ ᴊᴏɪɴ ᴍʏ ᴄʜᴀɴɴᴇʟ ᴛᴏ ᴜsᴇ ᴍᴇ.",
+            reply_markup=InlineKeyboardMarkup([[
+                InlineKeyboardButton("ᴊᴏɪɴ ❤️", url=invite_link)
+            ]]),
+            reply_to_message_id=message.id  
+        )
+        return
+
+    
+    if "https://t.me/" in message.text:
         datas = message.text.split("/")
         temp = datas[-1].replace("?single","").split("-")
         fromID = int(temp[0].strip())
