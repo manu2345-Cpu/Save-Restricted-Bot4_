@@ -43,7 +43,7 @@ async def logout(_, msg):
 async def main(bot: Client, message: Message):
     database.sessions.insert_one({"user_id": message.from_user.id})
     user_data = database.session.find_one({"user_id": message.from_user.id})
-    if get(user_data, 'logged_in', true):
+    if get(user_data, 'logged_in', True):
         await message.reply(strings['already_logged_in'])
         return 
     user_id = int(message.from_user.id)
