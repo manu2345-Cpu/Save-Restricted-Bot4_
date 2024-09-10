@@ -121,9 +121,9 @@ async def save(client: Client, message: Message):
             reply_to_message_id=message.id
         )
     return
-
 	
-  if "https://t.me/" in message.text:
+	
+if "https://t.me/" in message.text:
         datas = message.text.split("/")
         temp = datas[-1].replace("?single","").split("-")
         fromID = int(temp[0].strip())
