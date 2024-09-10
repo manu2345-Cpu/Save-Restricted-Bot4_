@@ -72,7 +72,6 @@ def progress(current, total, message, type):
 # start command
 @Client.on_message(filters.command(["start"]))
 async def send_start(client: Client, message: Message):
-
 	
     if not database.users.find_one({'user_id': message.from_user.id}):
         database.users.insert_one({
