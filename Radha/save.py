@@ -82,7 +82,7 @@ async def send_start(client: Client, message: Message):
             ]]),
             reply_to_message_id=message.id
         )
-        return
+    return
 
 	
     if not database.users.find_one({'user_id': message.from_user.id}):
@@ -120,7 +120,7 @@ async def save(client: Client, message: Message):
             ]]),
             reply_to_message_id=message.id
         )
-        return
+    return
 
 	
   if "https://t.me/" in message.text:
