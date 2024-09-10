@@ -10,7 +10,7 @@ import time
 import os
 import threading
 import json
-from config import API_ID, API_HASH
+from config import API_ID, API_HASH, FSUB_ID
 from database.db import database 
 from Radha.strings import strings, HELP_TXT
 
@@ -19,7 +19,15 @@ def get(obj, key, default=None):
         return obj[key]
     except:
         return default
+	    
 
+async def is_member(client: Client, user_id: int) -> bool:
+    try:
+        member = await client.get_chat_member(FSUB_ID, user_id)
+        return member.status in ['member', 'administrator', 'creator']
+    except:
+        return False
+	    
 
 async def downstatus(client: Client, statusfile, message):
     while True:
@@ -64,6 +72,21 @@ def progress(current, total, message, type):
 # start command
 @Client.on_message(filters.command(["start"]))
 async def send_start(client: Client, message: Message):
+
+
+    if not await is_member(client, message.chat.id):
+        invite_link = await client.export_chat_invite_link(FSUB_ID)
+        
+        await client.send_message(
+            chat_id=message.chat.id,
+            text="ʏᴏᴜ ᴍᴜsᴛ ᴊᴏɪɴ ᴍʏ ᴄʜᴀɴɴᴇʟ ᴛᴏ ᴜsᴇ ᴍᴇ.",
+            reply_markup=InlineKeyboardMarkup([[
+                InlineKeyboardButton("ᴊᴏɪɴ ❤️🚀", url=invite_link)
+            ]]),
+            reply_to_message_id=message.id
+        )
+        return
+
 	
     if not database.users.find_one({'user_id': message.from_user.id}):
         database.users.insert_one({
@@ -90,7 +113,21 @@ async def send_help(client: Client, message: Message):
 
 @Client.on_message(filters.text & filters.private)
 async def save(client: Client, message: Message):
-    if "https://t.me/" in message.text:
+	if not await is_member(client, message.chat.id):
+        invite_link = await client.export_chat_invite_link(FSUB_ID)
+        
+        await client.send_message(
+            chat_id=message.chat.id,
+            text="ʏᴏᴜ ᴍᴜsᴛ ᴊᴏɪɴ ᴍʏ ᴄʜᴀɴɴᴇʟ ᴛᴏ ᴜsᴇ ᴍᴇ.",
+            reply_markup=InlineKeyboardMarkup([[
+                InlineKeyboardButton("ᴊᴏɪɴ ❤️🚀", url=invite_link)
+            ]]),
+            reply_to_message_id=message.id
+        )
+        return
+
+	
+  if "https://t.me/" in message.text:
         datas = message.text.split("/")
         temp = datas[-1].replace("?single","").split("-")
         fromID = int(temp[0].strip())
