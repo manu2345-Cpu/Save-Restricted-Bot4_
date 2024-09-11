@@ -43,8 +43,9 @@ async def logout(client: Client, message: Message):
         return
         
     user_data = database.sessions.find_one({"user_id": message.chat.id})
-    if user_data is None or not user_data.get('session'):
-        return 
+    if user_data is None or not user_data.get('logged_in', False):
+        await message.reply("**You are not logged in! Please /login first.**")
+        return
     data = {
         'logged_in': False,
         'session': None,
