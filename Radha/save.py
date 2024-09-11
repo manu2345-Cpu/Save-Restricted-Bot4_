@@ -90,7 +90,6 @@ async def send_start(client: Client, message: Message):
         )
         return
 
-    else:
 	    
     if not database.users.find_one({'user_id': message.from_user.id}):
         database.users.insert_one({
