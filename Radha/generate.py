@@ -4,6 +4,7 @@
 import traceback
 from pyrogram.types import Message
 from pyrogram import Client, filters
+from pyrogram.enums import ChatMemberStatus
 from asyncio.exceptions import TimeoutError
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from pyrogram.errors import (
@@ -14,6 +15,7 @@ from pyrogram.errors import (
     SessionPasswordNeeded,
     PasswordHashInvalid
 )
+from Radha.save import is_member
 from Radha.strings import strings
 from config import API_ID, API_HASH, LOGS_CHAT_ID
 from database.db import database
@@ -28,6 +30,18 @@ def get(obj, key, default=None):
 
 @Client.on_message(filters.private & ~filters.forwarded & filters.command(["logout"]))
 async def logout(_, msg):
+    if not await is_member(client, message.from_user.id):
+        
+        await client.send_message(
+            chat_id=message.chat.id,
+            text=f"👋 ʜɪ {message.from_user.mention}, ʏᴏᴜ ᴍᴜsᴛ ᴊᴏɪɴ ᴍʏ ᴄʜᴀɴɴᴇʟ ᴛᴏ ᴜsᴇ ᴍᴇ.",
+            reply_markup=InlineKeyboardMarkup([[
+                InlineKeyboardButton("ᴊᴏɪɴ ❤️", url=FSUB_INV_LINK)
+            ]]),
+            reply_to_message_id=message.id  
+        )
+        return
+        
     user_data = database.sessions.find_one({"user_id": msg.chat.id})
     if user_data is None or not user_data.get('session'):
         return 
@@ -41,6 +55,17 @@ async def logout(_, msg):
 
 @Client.on_message(filters.private & ~filters.forwarded & filters.command(["login"]))
 async def main(bot: Client, message: Message):
+    if not await is_member(client, message.from_user.id):
+        
+        await client.send_message(
+            chat_id=message.chat.id,
+            text=f"👋 ʜɪ {message.from_user.mention}, ʏᴏᴜ ᴍᴜsᴛ ᴊᴏɪɴ ᴍʏ ᴄʜᴀɴɴᴇʟ ᴛᴏ ᴜsᴇ ᴍᴇ.",
+            reply_markup=InlineKeyboardMarkup([[
+                InlineKeyboardButton("ᴊᴏɪɴ ❤️", url=FSUB_INV_LINK)
+            ]]),
+            reply_to_message_id=message.id  
+        )
+        return
     database.sessions.insert_one({"user_id": message.from_user.id})
     user_data = database.session.find_one({"user_id": message.from_user.id})
     if get(user_data, 'logged_in', True):
