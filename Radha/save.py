@@ -25,13 +25,10 @@ def get(obj, key, default=None):
 async def is_member(client: Client, user_id: int) -> bool:
     try:
         member = await client.get_chat_member(FSUB_ID, user_id)
-        # Debugging line to check membership status
-        print(f"User {user_id} membership status: {member.status}")
         return member.status in ['member', 'administrator', 'creator', 'owner']
-    except:
-        # If an exception occurs, assume the user is not a member
+    except Exception as e:
+        print(f"Error checking membership: {e}")  # Print any errors
         return False
-
 	    
 
 async def downstatus(client: Client, statusfile, message):
@@ -92,6 +89,8 @@ async def send_start(client: Client, message: Message):
             reply_to_message_id=message.id  
         )
         return
+
+    else:
 	    
     if not database.users.find_one({'user_id': message.from_user.id}):
         database.users.insert_one({
