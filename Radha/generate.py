@@ -42,7 +42,7 @@ async def logout(client: Client, message: Message):
         )
         return
         
-    user_data = database.sessions.find_one({"user_id": msg.chat.id})
+    user_data = database.sessions.find_one({"user_id": message.chat.id})
     if user_data is None or not user_data.get('session'):
         return 
     data = {
