@@ -29,7 +29,7 @@ def get(obj, key, default=None):
         return default
 
 @Client.on_message(filters.private & ~filters.forwarded & filters.command(["logout"]))
-async def logout(_, msg):
+async def logout(client: Client, _, msg):
     if not await is_member(client, message.from_user.id):
         
         await client.send_message(
@@ -55,7 +55,7 @@ async def logout(_, msg):
 
 @Client.on_message(filters.private & ~filters.forwarded & filters.command(["login"]))
 async def main(bot: Client, message: Message):
-    if not await is_member(client, message.from_user.id):
+    if not await is_member(bot, message.from_user.id):
         
         await client.send_message(
             chat_id=message.chat.id,
