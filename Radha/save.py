@@ -26,7 +26,7 @@ async def is_member(client: Client, user_id: int) -> bool:
     try:
         chat_member = await client.get_chat_member(FSUB_ID, user_id)
 
-        print(f"User {user_id} status in {chat_id}: {chat_member.status}")
+    print(f"User {user_id} status in {chat_id}: {chat_member.status}")
         # Check if the user is a member, administrator, or creator
         return chat_member.status in ["member", "administrator", "creator"]
     except Exception as e:
