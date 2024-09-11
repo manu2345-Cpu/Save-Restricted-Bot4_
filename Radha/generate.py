@@ -68,7 +68,14 @@ async def login(bot: Client, message: Message):
         return
     
     # Insert or update user session data
-    database.sessions.update_one({"user_id": message.from_user.id}, {"$set": {"user_id": message.from_user.id}}, upsert=True)
+    if not database.sessions.find_one({"user_id": message.from_user.id}):
+        # Insert default session data for a new user
+        database.sessions.insert_one({
+            'user_id': message.from_user.id,
+            'logged_in': False,
+            'session': None,
+            '2FA': None
+        })
     user_data = database.sessions.find_one({"user_id": message.from_user.id})
     if get(user_data, 'logged_in', True):
         await message.reply(strings['already_logged_in'])
