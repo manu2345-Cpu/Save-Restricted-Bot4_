@@ -29,7 +29,7 @@ def get(obj, key, default=None):
         return default
 
 @Client.on_message(filters.private & ~filters.forwarded & filters.command(["logout"]))
-async def logout(client: Client, _, msg):
+async def logout(client: Client, message: Message):
     if not await is_member(client, message.from_user.id):
         
         await client.send_message(
@@ -51,7 +51,7 @@ async def logout(client: Client, _, msg):
         '2FA': None
     }
     database.sessions.update_one({'_id': user_data['_id']}, {'$set': data})
-    await msg.reply("**Logout Successfully** ♦")
+    await message.reply("**Logout Successfully** ♦")
 
 @Client.on_message(filters.private & ~filters.forwarded & filters.command(["login"]))
 async def main(bot: Client, message: Message):
