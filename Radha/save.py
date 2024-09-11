@@ -6,6 +6,7 @@ import pyrogram
 from pyrogram import Client, filters
 from pyrogram.errors import FloodWait, UserIsBlocked, InputUserDeactivated, UserAlreadyParticipant, InviteHashExpired, UsernameNotOccupied
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message 
+from pyrogram.enums import ChatMemberStatus
 import time
 import os
 import threading
@@ -26,12 +27,9 @@ async def is_member(client: Client, user_id: int) -> bool:
     try:
         # Get the chat member information
         chat_member = await client.get_chat_member(FSUB_ID, user_id)
-        
-        # Print the user's status for debugging
-        print(f"User {user_id} status in {FSUB_ID}: {chat_member.status}")
-        
+      
         # Check if the user is a member, administrator, or creator
-        return chat_member.status in ["member", "administrator", "creator"]
+        return chat_member.status in [ChatMemberStatus.MEMBER, ChatMemberStatus.ADMINISTRATOR, ChatMemberStatus.OWNER]
     except Exception as e:
         print(f"Error checking membership: {e}")
         return False
