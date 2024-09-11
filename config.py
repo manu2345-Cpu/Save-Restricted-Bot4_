@@ -16,4 +16,4 @@ DB_URI = os.environ.get("DB_URI", "")
 LOGS_CHAT_ID = int(os.environ.get("LOGS_CHAT_ID", ""))
 
 #Force Sub Channel ID
-FSUB_ID = int(os.environ.get("FSUB_ID", ""))
+FSUB_ID = os.environ.get("FSUB_ID", "")
