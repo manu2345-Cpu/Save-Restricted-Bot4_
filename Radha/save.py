@@ -13,6 +13,12 @@ import json
 from config import API_ID, API_HASH, FSUB_ID
 from database.db import database 
 from Radha.strings import strings, HELP_TXT
+import logging
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 
 def get(obj, key, default=None):
     try:
@@ -21,11 +27,14 @@ def get(obj, key, default=None):
         return default
 	    
 
+
 async def is_member(client: Client, user_id: int) -> bool:
     try:
         member = await client.get_chat_member(FSUB_ID, user_id)
+        logger.info(f"Checked membership for user {user_id}: {member.status}")
         return member.status in ['member', 'administrator', 'creator']
-    except:
+    except Exception as e:
+        logger.error(f"Error checking membership: {e}")
         return False
 	    
 
