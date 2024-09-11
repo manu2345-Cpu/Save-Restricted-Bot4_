@@ -25,7 +25,7 @@ def get(obj, key, default=None):
 async def is_member(client: Client, user_id: int) -> bool:
     try:
         chat_member = await client.get_chat_member(FSUB_ID, user_id)
-        return chat_member.status in {ChatMember.MEMBER, ChatMember.ADMINISTRATOR, ChatMember.CREATOR}
+        return chat_member.status in ["member", "administrator", "creator"]
     except Exception as e:
         print(f"Error checking membership: {e}")
         return False
