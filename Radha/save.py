@@ -24,15 +24,17 @@ def get(obj, key, default=None):
 
 async def is_member(client: Client, user_id: int) -> bool:
     try:
+        # Get the chat member information
         chat_member = await client.get_chat_member(FSUB_ID, user_id)
-
-    print(f"User {user_id} status in {chat_id}: {chat_member.status}")
+        
+        # Print the user's status for debugging
+        print(f"User {user_id} status in {FSUB_ID}: {chat_member.status}")
+        
         # Check if the user is a member, administrator, or creator
         return chat_member.status in ["member", "administrator", "creator"]
     except Exception as e:
         print(f"Error checking membership: {e}")
         return False
-	    
 
 async def downstatus(client: Client, statusfile, message):
     while True:
