@@ -54,20 +54,22 @@ async def logout(client: Client, message: Message):
     await message.reply("**Logout Successfully** ♦")
 
 @Client.on_message(filters.private & ~filters.forwarded & filters.command(["login"]))
-async def main(bot: Client, message: Message):
+async def login(bot: Client, message: Message):
+    # Check if the user is a member of the required channel/group
     if not await is_member(bot, message.from_user.id):
-        
-        await client.send_message(
+        await bot.send_message(
             chat_id=message.chat.id,
-            text=f"👋 ʜɪ {message.from_user.mention}, ʏᴏᴜ ᴍᴜsᴛ ᴊᴏɪɴ ᴍʏ ᴄʜᴀɴɴᴇʟ ᴛᴏ ᴜsᴇ ᴍᴇ.",
+            text=f"👋 Hi {message.from_user.mention}, you must join my channel to use me.",
             reply_markup=InlineKeyboardMarkup([[
-                InlineKeyboardButton("ᴊᴏɪɴ ❤️", url=FSUB_INV_LINK)
+                InlineKeyboardButton("Join ❤️", url=FSUB_INV_LINK)
             ]]),
             reply_to_message_id=message.id  
         )
         return
-    database.sessions.insert_one({"user_id": message.from_user.id})
-    user_data = database.session.find_one({"user_id": message.from_user.id})
+    
+    # Insert or update user session data
+    database.sessions.update_one({"user_id": message.from_user.id}, {"$set": {"user_id": message.from_user.id}}, upsert=True)
+    user_data = database.sessions.find_one({"user_id": message.from_user.id})
     if get(user_data, 'logged_in', True):
         await message.reply(strings['already_logged_in'])
         return 
