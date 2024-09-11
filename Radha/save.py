@@ -22,9 +22,9 @@ def get(obj, key, default=None):
         return default
 	    
 
-async def is_member(client: Client, user_id: int, chat_id: int) -> bool:
+async def is_member(client: Client, user_id: int) -> bool:
     try:
-        chat_member = await client.get_chat_member(chat_id, user_id)
+        chat_member = await client.get_chat_member(FSUB_ID, user_id)
         return chat_member.status in {ChatMember.MEMBER, ChatMember.ADMINISTRATOR, ChatMember.CREATOR}
     except Exception as e:
         print(f"Error checking membership: {e}")
