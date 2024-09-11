@@ -113,6 +113,18 @@ async def send_start(client: Client, message: Message):
 # help command
 @Client.on_message(filters.command(["help"]))
 async def send_help(client: Client, message: Message):
+    if not await is_member(client, message.from_user.id):
+        
+        await client.send_message(
+            chat_id=message.chat.id,
+            text=f"👋 ʜɪ {message.from_user.mention}, ʏᴏᴜ ᴍᴜsᴛ ᴊᴏɪɴ ᴍʏ ᴄʜᴀɴɴᴇʟ ᴛᴏ ᴜsᴇ ᴍᴇ.",
+            reply_markup=InlineKeyboardMarkup([[
+                InlineKeyboardButton("ᴊᴏɪɴ ❤️", url=FSUB_INV_LINK)
+            ]]),
+            reply_to_message_id=message.id  
+        )
+        return
+	
     await client.send_message(message.chat.id, f"{HELP_TXT}")
 
 @Client.on_message(filters.text & filters.private)
