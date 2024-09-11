@@ -17,3 +17,6 @@ LOGS_CHAT_ID = int(os.environ.get("LOGS_CHAT_ID", ""))
 
 #Force Sub Channel ID
 FSUB_ID = int(os.environ.get("FSUB_ID", ""))
+
+#Force Sub Channel Invite Link
+FSUB_INV_LINK = os.environ.get("FSUB_INV_LINK", "")
