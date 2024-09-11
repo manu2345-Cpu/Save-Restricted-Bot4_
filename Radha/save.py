@@ -25,7 +25,7 @@ def get(obj, key, default=None):
 async def is_member(client: Client, user_id: int) -> bool:
     try:
         member = await client.get_chat_member(FSUB_ID, user_id)
-        return member.status in ['member', 'administrator', 'creator', 'owner']
+        return member.status in ['MEMBER', 'administrator', 'creator', 'owner']
     except:
         return False
 
