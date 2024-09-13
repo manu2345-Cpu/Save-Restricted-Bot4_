@@ -46,9 +46,6 @@ def update_last_download_time(user_id: int):
         {'$set': {'last_download_time': time.time()}}
     )
 
-# Check if user can download (i.e., 5 minutes have passed since last download)
-import time
-
 def can_download(user_id: int):
     user = database.users.find_one({'user_id': user_id})
     if user:
