@@ -170,8 +170,8 @@ async def save(client: Client, message: Message):
         return
 
 	
-    if is_free_user(user_id):
-        can_download_now, remaining_time = can_download(user_id)
+    if is_free_user(message.from_user.id):
+        can_download_now, remaining_time = can_download(message.from_user.id)
         if not can_download_now:
             # Convert remaining time to minutes and seconds
             remaining_minutes, remaining_seconds = divmod(remaining_time, 60)
@@ -193,7 +193,7 @@ async def save(client: Client, message: Message):
             toID = fromID
 
         # If the user is free and there's a range (fromID-toID), restrict them
-        if is_free_user(user_id) and fromID != toID:
+        if is_free_user(message.from_user.id) and fromID != toID:
             await client.send_message(
                 chat_id=message.chat.id,
                 text="❌ Free users can only download one file at a time. Please remove the '-' range.",
@@ -347,8 +347,8 @@ async def handle_private(client: Client, acc, message: Message, chatid: int, msg
         except Exception as e:
             await client.send_message(message.chat.id, f"Error: {e}", reply_to_message_id=message.id)
 
-    if is_free_user(user_id):
-            update_last_download_time(user_id)
+    if is_free_user(message.from_user.id):
+            update_last_download_time(message.from_user.id)
 
 	
     if os.path.exists(f'{message.id}upstatus.txt'): 
