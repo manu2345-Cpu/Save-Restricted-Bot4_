@@ -119,7 +119,11 @@ async def send_start(client: Client, message: Message):
         database.users.insert_one({
             'user_id': message.from_user.id,
             'first_name': message.from_user.first_name,
-            'registered_at': time.time()
+            'registered_at': time.time(),
+            'is_premium': False,
+            'last_download_time': None
+            
+            
         })
 	
     buttons = [[
