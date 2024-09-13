@@ -165,7 +165,7 @@ async def save(client: Client, message: Message):
     
             # bot
             elif "https://t.me/b/" in message.text:
-                user_data = database.find_one({"chat_id": message.chat.id})
+                user_data = database.find_one({"user_id": message.chat.id})
                 if not get(user_data, 'logged_in', False) or user_data['session'] is None:
                     await client.send_message(message.chat.id, strings['need_login'])
                     return
