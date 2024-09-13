@@ -188,13 +188,15 @@ async def save(client: Client, message: Message):
         except:
             toID = fromID
 
-	if is_free_user(user_id) and fromID != toID:
+        # If the user is free and there's a range (fromID-toID), restrict them
+        if is_free_user(user_id) and fromID != toID:
             await client.send_message(
                 chat_id=message.chat.id,
                 text="❌ Free users can only download one file at a time. Please remove the '-' range.",
                 reply_to_message_id=message.id
             )
             return
+		
         for msgid in range(fromID, toID+1):
             # private
             if "https://t.me/c/" in message.text:
