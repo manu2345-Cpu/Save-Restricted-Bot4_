@@ -135,7 +135,7 @@ async def send_start(client: Client, message: Message):
         })
 	
     buttons = [[
-        InlineKeyboardButton("❣️ Developer", url = "https://t.me/i_am_radha")
+        InlineKeyboardButton("ᴅᴇᴠᴇʟᴏᴘᴇʀ ⚡️", url = "https://t.me/i_am_radha")
     ],[
         InlineKeyboardButton('🔍 sᴜᴘᴘᴏʀᴛ ɢʀᴏᴜᴘ', url='https://t.me/radhasuppportchat'),
         InlineKeyboardButton('🤖 ᴜᴘᴅᴀᴛᴇ ᴄʜᴀɴɴᴇʟ', url='https://t.me/tg_bots_radha')
