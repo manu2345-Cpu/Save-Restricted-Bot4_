@@ -8,6 +8,7 @@ from pyrogram.errors import FloodWait, UserIsBlocked, InputUserDeactivated, User
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message 
 from pyrogram.enums import ChatMemberStatus
 import time
+from datetime import timedelta
 import os
 import threading
 import json
@@ -33,6 +34,28 @@ async def is_member(client: Client, user_id: int) -> bool:
     except Exception as e:
         print(f"Error checking membership: {e}")
         return False
+
+def is_free_user(user_id: int) -> bool:
+    user = database.users.find_one({'user_id': user_id})
+    return user and user.get('is_premium', False) == False
+
+# Store download time after successful download
+def update_last_download_time(user_id: int):
+    database.users.update_one(
+        {'user_id': user_id},
+        {'$set': {'last_download_time': time.time()}}
+    )
+
+# Check if user can download (i.e., 5 minutes have passed since last download)
+def can_download(user_id: int) -> (bool, int):
+    user = database.users.find_one({'user_id': user_id})
+    if user and 'last_download_time' in user:
+        elapsed_time = time.time() - user['last_download_time']
+        remaining_time = 300 - elapsed_time  # 300 seconds = 5 minutes
+        if remaining_time > 0:
+            return False, remaining_time
+    return True, 0  # If no record of last download, allow the download
+
 
 async def downstatus(client: Client, statusfile, message):
     while True:
@@ -142,7 +165,20 @@ async def save(client: Client, message: Message):
         )
         return
 
-    
+	
+    if is_free_user(user_id):
+        can_download_now, remaining_time = can_download(user_id)
+        if not can_download_now:
+            # Convert remaining time to minutes and seconds
+            remaining_minutes, remaining_seconds = divmod(remaining_time, 60)
+            await client.send_message(
+                chat_id=message.chat.id,
+                text=f"❌ Free users can only download one file every 5 minutes. Please wait {int(remaining_minutes)} minutes and {int(remaining_seconds)} seconds before trying again.",
+                reply_to_message_id=message.id
+            )
+            return
+
+	
     if "https://t.me/" in message.text:
         datas = message.text.split("/")
         temp = datas[-1].replace("?single","").split("-")
@@ -151,6 +187,14 @@ async def save(client: Client, message: Message):
             toID = int(temp[1].strip())
         except:
             toID = fromID
+
+	if is_free_user(user_id) and fromID != toID:
+            await client.send_message(
+                chat_id=message.chat.id,
+                text="❌ Free users can only download one file at a time. Please remove the '-' range.",
+                reply_to_message_id=message.id
+            )
+            return
         for msgid in range(fromID, toID+1):
             # private
             if "https://t.me/c/" in message.text:
@@ -296,7 +340,11 @@ async def handle_private(client: Client, acc, message: Message, chatid: int, msg
             await client.send_photo(chat, file, caption=caption, reply_to_message_id=message.id)
         except Exception as e:
             await client.send_message(message.chat.id, f"Error: {e}", reply_to_message_id=message.id)
-    
+
+    if is_free_user(user_id):
+            update_last_download_time(user_id)
+
+	
     if os.path.exists(f'{message.id}upstatus.txt'): 
         os.remove(f'{message.id}upstatus.txt')
         os.remove(file)
