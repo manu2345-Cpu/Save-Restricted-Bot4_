@@ -185,7 +185,10 @@ async def save(client: Client, message: Message):
             remaining_minutes, remaining_seconds = divmod(remaining_time, 60)
             await client.send_message(
                 chat_id=message.chat.id,
-                text=f"**❌ Free User Can Save Single File in Every 5min Please wait {int(remaining_minutes)} Min and {int(remaining_seconds)} Sec before trying again.**",
+                text=f"**❌ Free User Can Save Single File in Every 5min Please wait {int(remaining_minutes)} Min and {int(remaining_seconds)} Sec before trying again.\n\nIf You Dont Want To Wait Then Buy Premium**",
+		reply_markup=InlineKeyboardMarkup([[
+                InlineKeyboardButton("ʙᴜʏ ᴘʀᴇᴍɪᴜᴍ ⚡️", url="https://t.me/i_am_radha")
+                ]]),
                 reply_to_message_id=message.id
             )
             return
@@ -204,7 +207,10 @@ async def save(client: Client, message: Message):
         if is_free_user(message.from_user.id) and fromID != toID:
             await client.send_message(
                 chat_id=message.chat.id,
-                text="**❌ Free Users Can Only Save Single File at a Time, If You Want To Save Bulk File Then Buy Premium @i_am_radha**",
+                text="**❌ Free Users Can Only Save Single File at a Time, If You Want To Save Bulk File Then Buy Premium**",
+		reply_markup=InlineKeyboardMarkup([[
+                InlineKeyboardButton("ʙᴜʏ ᴘʀᴇᴍɪᴜᴍ ⚡️", url="https://t.me/i_am_radha")
+                ]]),
                 reply_to_message_id=message.id
             )
             return
