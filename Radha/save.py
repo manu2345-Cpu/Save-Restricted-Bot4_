@@ -37,7 +37,7 @@ async def is_member(client: Client, user_id: int) -> bool:
 
 def is_free_user(user_id: int) -> bool:
     user = database.users.find_one({'user_id': user_id})
-    return user and user.get('is_premium', False) == False
+    return user and user.get('plan', 'free') == 'free'
 
 # Store download time after successful download
 def update_last_download_time(user_id: int):
@@ -125,7 +125,7 @@ async def send_start(client: Client, message: Message):
             'user_id': message.from_user.id,
             'first_name': message.from_user.first_name,
             'registered_at': time.time(),
-            'is_premium': False,
+            'plan': 'free',
             'last_download_time': None
             
             
