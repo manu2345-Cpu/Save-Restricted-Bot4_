@@ -47,14 +47,22 @@ def update_last_download_time(user_id: int):
     )
 
 # Check if user can download (i.e., 5 minutes have passed since last download)
-def can_download(user_id: int) -> (bool, int):
+import time
+
+def can_download(user_id: int):
     user = database.users.find_one({'user_id': user_id})
-    if user and 'last_download_time' in user:
-        elapsed_time = time.time() - user['last_download_time']
-        remaining_time = 300 - elapsed_time  # 300 seconds = 5 minutes
-        if remaining_time > 0:
-            return False, remaining_time
-    return True, 0  # If no record of last download, allow the download
+    if user:
+        last_download_time = user.get('last_download_time')
+        if last_download_time:
+            elapsed_time = time.time() - last_download_time
+            remaining_time = 300 - elapsed_time  # 5 minutes cooldown
+            if remaining_time > 0:
+                return False, remaining_time
+        else:
+            # If last_download_time is None, the user can download
+            return True, 0
+    # If user is not found, assume they can download
+    return True, 0
 
 
 async def downstatus(client: Client, statusfile, message):
